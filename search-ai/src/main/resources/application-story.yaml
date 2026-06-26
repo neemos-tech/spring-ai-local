@@ -1,0 +1,18 @@
+spring:
+  mongodb:
+    uri: mongodb+srv://neemosapps_db_user:${DB_PASSWORD}@${DB_URL}
+  ai:
+    vectorstore:
+      mongodb:
+        collection-name: boy_store
+        index-name: boy_index
+        initialize-schema: true
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        frequency-penalty: 1
+        model: llama3:latest
+      embedding:
+        model: qwen3-embedding:8b
+rag-resource:
+  name: "classpath:The Boy Story.pdf"

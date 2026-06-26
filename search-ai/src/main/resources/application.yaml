@@ -1,0 +1,50 @@
+spring:
+  application:
+  name: search-1i
+  mongodb:
+    uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_URL}
+
+    auto-index-creation: true
+  ai:
+    vectorstore:
+      mongodb:
+        collection-name: cassandra_store
+        index-name: cassandra_index
+        initialize-schema: true
+#        collection-name: documentation_store
+#        index-name: autoembed_index
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        frequency-penalty: 1
+        model: llama3:latest
+# Maximum tokens the model can generate per response (Default is usually -1 for infinite, or 128)
+        num-ctx: 4096
+# The total context window size (Default is 2048)
+        num-predict: 500
+        temperature: 0.4
+      embedding:
+        model: qwen3-embedding:8b
+
+kind: Application
+
+rag-resource:
+  name: "classpath:java_performance.pdf"
+#  name: "classpath:CockroachLabs_CockroachDB.pdf"
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+#        ai: DEBUG
+        ai:
+          chat:
+            client:
+              advisor: DEBUG
+        data:
+          mongodb:
+            core:
+
+              MongoTemplate: DEBUG
