@@ -6,10 +6,12 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
+import java.util.List;
 import java.util.Map;
 
 import static com.tdf.search.constants.SystemPrompts.STORY_SYSTEM_PROMP;
@@ -21,6 +23,51 @@ public class OllamaChatService implements AIChatService {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
+
+
+    private SearchRequest getCustomSearchRequest(String query){
+        return SearchRequest.builder()
+                .query(query)
+                .similarityThreshold(0.8)
+                .topK(6)
+                .build();
+    }
+
+    public @NonNull Flux<String> getCustomVectorResponse(Map<String, String> queryMap) {
+
+        String query = queryMap.getOrDefault("query", "Give me the summary of the document?");
+
+        SearchRequest searchRequest = getCustomSearchRequest(query);
+        List<Document> documents = vectorStore.similaritySearch(searchRequest);
+
+        System.out.println("\n================ RETRIEVED " + documents.size() + " DOCUMENTS ================\n");
+
+        for (int i = 0; i < documents.size(); i++) {
+            Document doc = documents.get(i);
+
+            System.out.println("Document #" + (i + 1));
+
+            Object score = doc.getMetadata().get("score");
+            if (score != null) {
+                System.out.println("Score : " + score);
+            }
+
+            System.out.println(doc.getText());
+            System.out.println("---------------------------------------------");
+        }
+
+        return chatClient.prompt()
+                .system(STORY_SYSTEM_PROMP)
+                .advisors(
+                        QuestionAnswerAdvisor.builder(vectorStore)
+                                .searchRequest(searchRequest)
+                                .build(),
+                        new SimpleLoggerAdvisor()
+                )
+                .user(query)
+                .stream()
+                .content();
+    }
 
 
     @Override
@@ -37,6 +84,12 @@ public class OllamaChatService implements AIChatService {
 
     @Override
     public @NonNull Flux<String> getVectorResponse(Map<String, String> queryMap) {
+//        return getCustomVectorResponse(queryMap);
+
+        return getDefaultVectorResponse(queryMap);
+    }
+
+    private @NonNull Flux<String> getDefaultVectorResponse(Map<String, String> queryMap) {
         String query = queryMap.getOrDefault("query", "Give me the summary of the document?");
         return chatClient.prompt()
                 .system(STORY_SYSTEM_PROMP)

@@ -41,6 +41,11 @@ public class DocumentInitializer {
             log.info("Accepting to vector store");
 
             vectorStore.accept(splitList);
+            // or vectorStore.add(splitList); as internally, accept calls add only
+            // or vectorStore.write(splitList);as internally, write calls accept only
+
+            vectorStore.similaritySearch("");
+
             log.info("Successfully Loaded the document");
 
         } catch (Exception e){

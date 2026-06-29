@@ -1,0 +1,16 @@
+spring:
+  ai:
+    vectorstore:
+      mongodb:
+        collection-name: hotel_store
+        index-name: hotel_index
+        initialize-schema: true
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        frequency-penalty: 0
+        model: qwen2.5:14b
+      embedding:
+        model: qwen3-embedding:8b
+rag-resource:
+  name: "classpath:hotel_review_dataset.csv"

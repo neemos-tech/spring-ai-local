@@ -10,9 +10,9 @@ spring:
     ollama:
       base-url: http://localhost:11434
       chat:
-        frequency-penalty: 1
-        model: llama3:latest
+        frequency-penalty: 0
+        model: qwen2.5:14b
       embedding:
         model: qwen3-embedding:8b
 rag-resource:
-  name: "classpath:The Boy Story.pdf"
+  name: "classpath:The or .pdf"
