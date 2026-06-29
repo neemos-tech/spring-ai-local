@@ -245,7 +245,9 @@ https://www.mongodb.com/atlas
 
 ## MongoDB Atlas Vector Search
 
-https://www.mongodb.com/docs/atlas/atlas-vector-search/
+https://www.mongodb.com/docs/vector-search/
+
+https://www.mongodb.com/docs/vector-search/tutorials/quick-start/?deployment-type=atlas&embedding=auto&interface=driver&language=java-sync
 
 ## Ollama
 
