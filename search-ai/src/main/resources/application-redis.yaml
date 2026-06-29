@@ -1,0 +1,23 @@
+spring:
+  data:
+    redis:
+      url: ${REDIS_URI}
+  ai:
+    vectorstore:
+      redis:
+        initialize-schema: true
+        index-name: hotel-vector-index
+        prefix: "hotel:"
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        frequency-penalty: 0
+        model: qwen2.5:14b
+      embedding:
+        model: embeddinggemma:latest
+
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.vectorstore.mongodb.autoconfigure.MongoDBAtlasVectorStoreAutoConfiguration
+rag-resource:
+  name: "classpath:The or .pdf"
