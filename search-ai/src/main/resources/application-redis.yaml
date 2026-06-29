@@ -1,6 +1,7 @@
 spring:
   data:
     redis:
+      client-type: jedis
       url: ${REDIS_URI}
   ai:
     vectorstore:
@@ -20,4 +21,4 @@ spring:
     exclude:
       - org.springframework.ai.vectorstore.mongodb.autoconfigure.MongoDBAtlasVectorStoreAutoConfiguration
 rag-resource:
-  name: "classpath:The or .pdf"
+  name: "classpath:CockroachLabs_CockroachDB.pdf"

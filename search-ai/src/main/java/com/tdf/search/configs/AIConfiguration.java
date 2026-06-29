@@ -1,6 +1,7 @@
 package com.tdf.search.configs;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.vectorstore.redis.autoconfigure.RedisVectorStoreAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -11,6 +12,8 @@ public class AIConfiguration {
     @Bean
     @Primary
     public ChatClient chatClient(ChatClient.Builder builder){
+
+        RedisVectorStoreAutoConfiguration c = new RedisVectorStoreAutoConfiguration();
         return builder
                 .defaultSystem("Be concise and answer to the point")
                 .build();

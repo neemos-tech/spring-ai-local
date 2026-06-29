@@ -15,7 +15,7 @@ public class OpenAIChatService implements AIChatService {
     }
 
     @Override
-    public @NonNull Flux<String> getVectorResponse(Map<String, String> requestMap) {
+    public @NonNull Flux<String> getVectorResponse(Map<String, String> requestMap, boolean configNeeded) {
         return null;
     }
 }
