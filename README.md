@@ -153,7 +153,9 @@ The ingestion workflow consists of:
 Using Maven:
 
 ```bash
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=redis && -DREDIS_URI=<REDIS_URI>
+
+mvn spring-boot:run -Dspring-boot.run.profiles=story && -DDB_URL=<DB_URL> && -DDB_USER=<DB_USER> &&  -DDB_PASSWORD=<DB_PASSWORD>
 ```
 
 Or run the Spring Boot application directly from your preferred IDE.
