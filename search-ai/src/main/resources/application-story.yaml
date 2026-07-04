@@ -15,4 +15,5 @@ spring:
       embedding:
         model: qwen3-embedding:8b
 rag-resource:
-  name: "classpath:The Boy Story.pdf"
+  names:
+   classpath:The Boy Story.pdf

@@ -20,5 +20,7 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.ai.vectorstore.mongodb.autoconfigure.MongoDBAtlasVectorStoreAutoConfiguration
+      -
 rag-resource:
-  name: "classpath:CockroachLabs_CockroachDB.pdf"
+  names:
+    classpath:CockroachLabs_CockroachDB.pdf

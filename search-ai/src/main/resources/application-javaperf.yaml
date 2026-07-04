@@ -2,8 +2,8 @@ spring:
   ai:
     vectorstore:
       mongodb:
-        collection-name: performance_book_store
-        index-name: performance_book_index
+        collection-name: performance_store
+        index-name: performance_index
         initialize-schema: true
     ollama:
       base-url: http://localhost:11434
@@ -12,7 +12,10 @@ spring:
 #        model: deepseek-coder:33b
         model: qwen2.5-coder:latest
       embedding:
-        model: embeddinggemma:latest
+        model: qwen3-embedding:8b
+
 rag-resource:
-  name: "classpath:java-performance.pdf"
+  names:
+    classpath:java-performance.pdf,
+    classpath:jls25.pdf
   prompt-key: "java"

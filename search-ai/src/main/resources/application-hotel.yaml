@@ -13,4 +13,5 @@ spring:
       embedding:
         model: qwen3-embedding:8b
 rag-resource:
-  name: "classpath:hotel_review_dataset.csv"
+  names:
+    classpath:hotel_review_dataset.csv

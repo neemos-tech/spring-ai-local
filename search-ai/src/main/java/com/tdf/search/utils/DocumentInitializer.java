@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -27,22 +28,26 @@ public class DocumentInitializer {
 
     private final VectorStore vectorStore;
 
-    @Value("${rag-resource.name}")
-    private Resource resource;
+    @Value("${rag-resource.names}")
+    private Resource[] resources;
 
 //    @EventListener(ApplicationReadyEvent.class)
     public void loadResource(){
 
         try{
-            log.info("Loading resource {}", resource);
-            TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
-            TokenTextSplitter tokenTextSplitter = TokenTextSplitter.builder().build();
-            List<Document> splitList = tokenTextSplitter.apply(tikaDocumentReader.read());
+            List<Document> splitList = new ArrayList<>();
+            for (Resource resource : resources) {
+                log.info("Loading resource {}", resource);
+                TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
+                TokenTextSplitter tokenTextSplitter = TokenTextSplitter.builder().build();
+                splitList.addAll(tokenTextSplitter.apply(tikaDocumentReader.read()));
+            }
+
 
             log.info("Found {} splitter elements", splitList.size());
 
             if(splitList.isEmpty()){
-                throw new RuntimeException("No documents found in the resource: " + resource);
+                throw new RuntimeException("No documents found in the resources: " + resources);
             } else if(splitList.size() < BATCH_SIZE){
                 log.info("Accepting to vector store");
 
@@ -64,8 +69,6 @@ public class DocumentInitializer {
     }
 
     public void loadDocumentParallel(List<Document> splitList) {
-        log.info("Loading resource {}", resource);
-
         // 1. Read + split (still sequential, this part is fast)
         log.info("Total chunks: {}. Starting parallel ingestion...", splitList.size());
 

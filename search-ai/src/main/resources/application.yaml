@@ -31,7 +31,8 @@ spring:
 kind: Application
 
 rag-resource:
-  name: "classpath:java_performance.pdf"
+  names:
+    classpath:java_performance.pdf
 #  name: "classpath:CockroachLabs_CockroachDB.pdf"
 
 
