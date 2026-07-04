@@ -83,9 +83,8 @@ public class OllamaChatService implements AIChatService {
     }
 
     @Override
-    public @NonNull Flux<String> getVectorResponse(Map<String, String> queryMap) {
-//        return getCustomVectorResponse(queryMap);
-
+    public @NonNull Flux<String> getVectorResponse(Map<String, String> queryMap, boolean configNeeded) {
+        if (configNeeded) return getCustomVectorResponse(queryMap);
         return getDefaultVectorResponse(queryMap);
     }
 

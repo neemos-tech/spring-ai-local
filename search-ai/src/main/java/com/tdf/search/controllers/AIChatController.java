@@ -38,8 +38,10 @@ public class AIChatController {
 
     //    @PostMapping(value = "/story", produces = "text/event-stream")
     @PostMapping(value = "/respond")
-    public Flux<String> getSolutions(@RequestBody Map<String, String> requestMap){
-        return ollamaChatService.getVectorResponse(requestMap);
+    public Flux<String> getSolutions(@RequestBody Map<String, String> requestMap,
+                                     @RequestParam(value = "config-needed", required = false,
+                                             defaultValue = "false") boolean configNeeded){
+        return ollamaChatService.getVectorResponse(requestMap, configNeeded);
     }
 
 }

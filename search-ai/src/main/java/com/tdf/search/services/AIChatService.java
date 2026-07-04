@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface AIChatService {
     @NonNull Flux<String> getQuerySolution(String query);
-    @NonNull Flux<String> getVectorResponse(Map<String, String> requestMap);
+    @NonNull Flux<String> getVectorResponse(Map<String, String> requestMap, boolean configNeeded);
 }
