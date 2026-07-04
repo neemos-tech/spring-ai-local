@@ -1,0 +1,18 @@
+spring:
+  ai:
+    vectorstore:
+      mongodb:
+        collection-name: performance_book_store
+        index-name: performance_book_index
+        initialize-schema: true
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        frequency-penalty: 0
+#        model: deepseek-coder:33b
+        model: qwen2.5-coder:latest
+      embedding:
+        model: embeddinggemma:latest
+rag-resource:
+  name: "classpath:java-performance.pdf"
+  prompt-key: "java"
