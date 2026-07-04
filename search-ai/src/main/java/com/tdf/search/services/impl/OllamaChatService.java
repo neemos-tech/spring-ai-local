@@ -1,5 +1,7 @@
 package com.tdf.search.services.impl;
 
+import com.tdf.search.entities.PromptKey;
+import com.tdf.search.constants.SystemPrompts;
 import com.tdf.search.services.AIChatService;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -9,12 +11,13 @@ import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvi
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import java.util.List;
 import java.util.Map;
 
-import static com.tdf.search.constants.SystemPrompts.STORY_SYSTEM_PROMP;
+import static com.tdf.search.constants.SystemPrompts.STORY_SYSTEM_PROMPT;
 
 
 @Component
@@ -24,12 +27,14 @@ public class OllamaChatService implements AIChatService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
 
+    @Value("${rag-resource.prompt-key}")
+    private String promptKey;
 
     private SearchRequest getCustomSearchRequest(String query){
         return SearchRequest.builder()
                 .query(query)
-                .similarityThreshold(0.8)
-                .topK(6)
+                .similarityThreshold(0.6)
+                .topK(3)
                 .build();
     }
 
@@ -57,7 +62,7 @@ public class OllamaChatService implements AIChatService {
         }
 
         return chatClient.prompt()
-                .system(STORY_SYSTEM_PROMP)
+                .system(STORY_SYSTEM_PROMPT)
                 .advisors(
                         QuestionAnswerAdvisor.builder(vectorStore)
                                 .searchRequest(searchRequest)
@@ -91,8 +96,17 @@ public class OllamaChatService implements AIChatService {
     private @NonNull Flux<String> getDefaultVectorResponse(Map<String, String> queryMap) {
         String query = queryMap.getOrDefault("query", "Give me the summary of the document?");
         return chatClient.prompt()
-                .system(STORY_SYSTEM_PROMP)
-                .advisors(QuestionAnswerAdvisor.builder(vectorStore).build(), new SimpleLoggerAdvisor())
+                .system(SystemPrompts.getSystemPrompt(PromptKey.getPromptKey(promptKey)))
+                .advisors(
+                        QuestionAnswerAdvisor.builder(vectorStore).build()
+                )
+//                .advisors(new SimpleLoggerAdvisor())
+//                .advisors(
+//                        QuestionAnswerAdvisor.builder(vectorStore).build(),
+//                        MessageChatMemoryAdvisor.builder(
+//                                new MessageWindowChatMemory()).build()
+//                )
+//                .advisors(QuestionAnswerAdvisor.builder(vectorStore).build(), new SimpleLoggerAdvisor())
                 .user(query)
                 .stream()
                 .content();

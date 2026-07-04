@@ -22,7 +22,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 @Slf4j
 public class DocumentInitializer {
 
-    private static final int BATCH_SIZE = 20;
+    private static final int BATCH_SIZE = 10;
     private static final int THREAD_POOL_SIZE = 4; // M4 Pro: can go up to 8
 
     private final VectorStore vectorStore;
@@ -38,15 +38,24 @@ public class DocumentInitializer {
             TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
             TokenTextSplitter tokenTextSplitter = TokenTextSplitter.builder().build();
             List<Document> splitList = tokenTextSplitter.apply(tikaDocumentReader.read());
-            log.info("Accepting to vector store");
 
-            vectorStore.accept(splitList);
-            // or vectorStore.add(splitList); as internally, accept calls add only
-            // or vectorStore.write(splitList);as internally, write calls accept only
+            log.info("Found {} splitter elements", splitList.size());
 
-            vectorStore.similaritySearch("");
+            if(splitList.isEmpty()){
+                throw new RuntimeException("No documents found in the resource: " + resource);
+            } else if(splitList.size() < BATCH_SIZE){
+                log.info("Accepting to vector store");
 
-            log.info("Successfully Loaded the document");
+                vectorStore.accept(splitList);
+                // or vectorStore.add(splitList); as internally, accept calls add only
+                // or vectorStore.write(splitList);as internally, write calls accept only
+
+                vectorStore.similaritySearch("");
+
+                log.info("Successfully Loaded the document");
+            } else {
+                loadDocumentParallel(splitList);
+            }
 
         } catch (Exception e){
             log.error("Unknown Exception Occured : {}", e.getMessage());
@@ -54,14 +63,10 @@ public class DocumentInitializer {
 
     }
 
-    public void loadDocumentParallel(Resource resource) {
+    public void loadDocumentParallel(List<Document> splitList) {
         log.info("Loading resource {}", resource);
 
         // 1. Read + split (still sequential, this part is fast)
-        TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
-        TokenTextSplitter tokenTextSplitter = TokenTextSplitter.builder().build();
-        List<Document> splitList = tokenTextSplitter.apply(tikaDocumentReader.read());
-
         log.info("Total chunks: {}. Starting parallel ingestion...", splitList.size());
 
         // 2. Partition into batches

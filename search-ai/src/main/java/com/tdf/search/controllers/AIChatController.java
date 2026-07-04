@@ -6,6 +6,8 @@ import com.tdf.search.utils.DocumentInitializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;

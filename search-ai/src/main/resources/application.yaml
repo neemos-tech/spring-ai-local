@@ -1,12 +1,11 @@
 spring:
-#  autoconfigure:
-#    exclude:
-#      - org.springframework.ai.vectorstore.redis.autoconfigure.RedisVectorStoreAutoConfiguration
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.vectorstore.redis.autoconfigure.RedisVectorStoreAutoConfiguration
   application:
-  name: search-1i
+    name: search-1i
   mongodb:
     uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_URL}
-
     auto-index-creation: true
   ai:
     vectorstore:
@@ -24,8 +23,8 @@ spring:
 # Maximum tokens the model can generate per response (Default is usually -1 for infinite, or 128)
         num-ctx: 4096
 # The total context window size (Default is 2048)
-        num-predict: 500
-        temperature: 0.4
+        num-predict: 1050
+        temperature: 0.8
       embedding:
         model: qwen3-embedding:8b
 
