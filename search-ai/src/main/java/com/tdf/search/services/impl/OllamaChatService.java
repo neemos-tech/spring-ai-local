@@ -33,8 +33,8 @@ public class OllamaChatService implements AIChatService {
     private SearchRequest getCustomSearchRequest(String query){
         return SearchRequest.builder()
                 .query(query)
-                .similarityThreshold(0.6)
-                .topK(3)
+                .similarityThreshold(0.75)
+                .topK(6)
                 .build();
     }
 

@@ -10,7 +10,8 @@ spring:
       chat:
         frequency-penalty: 0
 #        model: deepseek-coder:33b
-        model: qwen2.5-coder:latest
+        model: qwen3-coder:30b
+#        model: qwen2.5-coder:latest
       embedding:
         model: qwen3-embedding:8b
 
